@@ -58,7 +58,7 @@ internal static class GeneratedUiInstaller
         root.RowStyles.Add(new RowStyle(SizeType.Absolute, 36));
         form.Controls.Add(root);
 
-        var header = BuildHeader(form, hiddenDevices, out var deviceView, out var refreshButton, out var mediaButton, out var selectAllButton);
+        var header = BuildHeader(form, out var deviceView, out var refreshButton, out var mediaButton, out var selectAllButton);
         root.Controls.Add(header, 0, 0);
 
         var mediaShell = new RoundedPanel
@@ -122,7 +122,7 @@ internal static class GeneratedUiInstaller
         toolbar.BringToFront();
         root.Controls.Add(mediaShell, 0, 1);
 
-        var footer = BuildFooter(form, hiddenDestination, out var pathView, out var chooseFolder, out var startButton);
+        var footer = BuildFooter(hiddenDestination, out var pathView, out var chooseFolder, out var startButton);
         root.Controls.Add(footer, 0, 2);
 
         var statusBar = new Panel { Dock = DockStyle.Fill, BackColor = AppTheme.Background };
@@ -182,10 +182,7 @@ internal static class GeneratedUiInstaller
             startButton.Enabled = chosen.Count > 0;
         };
 
-        selectAllButton.Click += (_, _) =>
-        {
-            gallery.SelectAll();
-        };
+        selectAllButton.Click += (_, _) => gallery.SelectAll();
 
         refreshButton.Click += async (_, _) =>
         {
@@ -237,10 +234,16 @@ internal static class GeneratedUiInstaller
             SyncDevice(hiddenDevices, deviceView, connection);
         };
 
+        var galleryCountCache = allMedia.Count;
         var uiTimer = new System.Windows.Forms.Timer { Interval = 180 };
         uiTimer.Tick += (_, _) =>
         {
-            if (form.IsDisposed) { uiTimer.Stop(); uiTimer.Dispose(); return; }
+            if (form.IsDisposed)
+            {
+                uiTimer.Stop();
+                uiTimer.Dispose();
+                return;
+            }
             gallery.Invalidate();
             if (allMedia.Count != galleryCountCache)
             {
@@ -249,7 +252,6 @@ internal static class GeneratedUiInstaller
             }
             SyncDevice(hiddenDevices, deviceView, connection);
         };
-        var galleryCountCache = allMedia.Count;
         uiTimer.Start();
 
         SyncDevice(hiddenDevices, deviceView, connection);
@@ -259,7 +261,7 @@ internal static class GeneratedUiInstaller
         form.Invalidate(true);
     }
 
-    static RoundedPanel BuildHeader(MainForm form, ComboBox hiddenDevices, out DeviceSelectorView deviceView,
+    static RoundedPanel BuildHeader(MainForm form, out DeviceSelectorView deviceView,
         out RoundButton refreshButton, out RoundButton mediaButton, out RoundButton selectAllButton)
     {
         var header = new RoundedPanel
@@ -337,7 +339,7 @@ internal static class GeneratedUiInstaller
         return header;
     }
 
-    static RoundedPanel BuildFooter(MainForm form, TextBox hiddenDestination, out PathDisplayView pathView,
+    static RoundedPanel BuildFooter(TextBox hiddenDestination, out PathDisplayView pathView,
         out RoundButton chooseFolder, out RoundButton startButton)
     {
         var footer = new RoundedPanel
@@ -454,7 +456,7 @@ internal static class GeneratedUiInstaller
         }
         else
         {
-            view.DisplayText = text.Contains("пользователь", StringComparison.OrdinalIgnoreCase) ? text : text;
+            view.DisplayText = text;
             connection.Text = $"●  Телефон подключён  ·  {text}";
             connection.ForeColor = AppTheme.Success;
         }
