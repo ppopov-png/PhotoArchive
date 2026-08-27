@@ -292,13 +292,13 @@ internal static class GeneratedUiInstaller
             ForeColor = AppTheme.TextSecondary
         };
 
-        deviceView = new DeviceSelectorView { Location = new Point(22, 91), Size = new Size(318, 46) };
-        refreshButton = Primary("↻  Обновить телефон", 190);
-        refreshButton.Location = new Point(354, 91);
-        mediaButton = Secondary("▧  Медиатека", 166);
-        mediaButton.Location = new Point(556, 91);
-        selectAllButton = Secondary("☑  Выбрать всё", 166);
-        selectAllButton.Location = new Point(734, 91);
+        var localDeviceView = new DeviceSelectorView { Location = new Point(22, 91), Size = new Size(318, 46) };
+        var localRefreshButton = Primary("↻  Обновить телефон", 190);
+        localRefreshButton.Location = new Point(354, 91);
+        var localMediaButton = Secondary("▧  Медиатека", 166);
+        localMediaButton.Location = new Point(556, 91);
+        var localSelectAllButton = Secondary("☑  Выбрать всё", 166);
+        localSelectAllButton.Location = new Point(734, 91);
 
         var help = new Label
         {
@@ -335,7 +335,12 @@ internal static class GeneratedUiInstaller
                 SendMessage(form.Handle, 0xA1, 0x2, 0);
             };
 
-        header.Controls.AddRange(new Control[] { logo, title, subtitle, deviceView, refreshButton, mediaButton, selectAllButton, help, minimize, maximize, close });
+        header.Controls.AddRange(new Control[] { logo, title, subtitle, localDeviceView, localRefreshButton, localMediaButton, localSelectAllButton, help, minimize, maximize, close });
+
+        deviceView = localDeviceView;
+        refreshButton = localRefreshButton;
+        mediaButton = localMediaButton;
+        selectAllButton = localSelectAllButton;
         return header;
     }
 
@@ -378,22 +383,32 @@ internal static class GeneratedUiInstaller
             ForeColor = AppTheme.TextSecondary
         };
 
-        pathView = new PathDisplayView { Location = new Point(80, 37), Size = new Size(650, 44), Cursor = Cursors.Hand, PathText = hiddenDestination.Text };
-        chooseFolder = Secondary("Изменить  ✎", 142);
-        startButton = Primary("Начать сортировку", 218);
-        startButton.Height = 52;
-        startButton.Enabled = false;
+        var localPathView = new PathDisplayView
+        {
+            Location = new Point(80, 37),
+            Size = new Size(650, 44),
+            Cursor = Cursors.Hand,
+            PathText = hiddenDestination.Text
+        };
+        var localChooseFolder = Secondary("Изменить  ✎", 142);
+        var localStartButton = Primary("Начать сортировку", 218);
+        localStartButton.Height = 52;
+        localStartButton.Enabled = false;
 
         void Position()
         {
             var right = footer.ClientSize.Width - 18;
-            startButton.Location = new Point(right - startButton.Width, 22);
-            chooseFolder.Location = new Point(startButton.Left - chooseFolder.Width - 12, 27);
-            pathView.Width = Math.Max(300, chooseFolder.Left - 92);
+            localStartButton.Location = new Point(right - localStartButton.Width, 22);
+            localChooseFolder.Location = new Point(localStartButton.Left - localChooseFolder.Width - 12, 27);
+            localPathView.Width = Math.Max(300, localChooseFolder.Left - 92);
         }
         footer.Resize += (_, _) => Position();
         Position();
-        footer.Controls.AddRange(new Control[] { iconShell, caption, pathView, chooseFolder, startButton });
+        footer.Controls.AddRange(new Control[] { iconShell, caption, localPathView, localChooseFolder, localStartButton });
+
+        pathView = localPathView;
+        chooseFolder = localChooseFolder;
+        startButton = localStartButton;
         return footer;
     }
 
