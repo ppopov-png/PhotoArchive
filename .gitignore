@@ -1,0 +1,12 @@
+.gradle/
+.kotlin/
+**/build/
+**/bin/
+**/obj/
+dist/
+*.pdb
+*.hprof
+local.properties
+.env.local
+*.iml
+.idea/
